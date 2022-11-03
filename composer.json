@@ -1,0 +1,52 @@
+{
+  "name": "simplygoodwork/nag",
+  "description": "Email alerts for suspicious CP logins",
+  "type": "craft-plugin",
+  "version": "1.0.0",
+  "license": "MIT",
+  "keywords": [
+    "craft",
+    "cms",
+    "craftcms",
+    "craft-plugin",
+    "nag"
+  ],
+  "support": {
+    "email": "dev@simplygoodwork.com",
+    "issues": "https://github.com/simplygoodwork/craft-nag/issues",
+    "docs": "https://github.com/simplygoodwork/craft-nag/blob/main/README.md"
+  },
+  "authors": [
+    {
+      "name": "Good Work",
+      "homepage": "https://simplygoodwork.com/"
+    }
+  ],
+  "require": {
+    "craftcms/cms": "^4.0.0",
+    "matomo/device-detector": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "simplygoodwork\\nag\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Nag",
+    "handle": "nag",
+    "developer": "Good Work",
+    "developerUrl": "https://simplygoodwork.com/",
+    "documentationUrl": "https://github.com/simplygoodwork/nag/blob/main/README.md",
+    "changelogUrl": "https://raw.githubusercontent.com/simplygoodwork/nag/main/CHANGELOG.md",
+    "components": {
+      "nagService": "simplygoodwork\\nag\\services\\NagService"
+    },
+    "class": "simplygoodwork\\nag\\Nag"
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  }
+}

@@ -1,0 +1,12 @@
+Hello {{ user.friendlyName }},
+
+Someone signed-in to your {{ siteName }} website account.
+
+When: {{ now|date('l j F Y \\a\\t g.ia') }}
+Using: {{ meta.browser }} on {{ meta.os }}
+{% if meta.location %}Near: {{ meta.location }}{% endif %} 
+IP Address: {{ craft.app.request.userIP }}
+
+If this was you, you don't need to do anything. Otherwise, please contact your website administrator.
+
+{{ craft.nag.alertFooter }}
