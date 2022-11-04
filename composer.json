@@ -1,8 +1,8 @@
 {
   "name": "simplygoodwork/craft-nag",
-  "description": "Email alerts for suspicious CP logins",
+  "description": "Email alerts in case of suspicious user logins",
   "type": "craft-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "keywords": [
     "craft",
@@ -23,7 +23,7 @@
     }
   ],
   "require": {
-    "craftcms/cms": "^3.7|^4.0",
+    "craftcms/cms": "^4.0",
     "php": "^7.4|^8.0",
     "matomo/device-detector": "^6.0"
   },
