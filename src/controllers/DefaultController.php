@@ -25,12 +25,6 @@ class DefaultController extends Controller
     // Public Methods
     // =========================================================================
 
-    /**
-     * Handle a request going to our module's index action URL,
-     * e.g.: actions/runway-module/default
-     *
-     * @return mixed
-     */
     public function actionTest()
     {
       Nag::$plugin->nagService->handleLogin(Craft::$app->user->getIdentity());

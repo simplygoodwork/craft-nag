@@ -23,7 +23,8 @@
     }
   ],
   "require": {
-    "craftcms/cms": "^4.0.0",
+    "craftcms/cms": "^3.7|^4.0",
+    "php": "^7.4|^8.0",
     "matomo/device-detector": "^6.0"
   },
   "autoload": {
