@@ -2,7 +2,7 @@
   "name": "simplygoodwork/craft-nag",
   "description": "Email alerts in case of suspicious user logins",
   "type": "craft-plugin",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "keywords": [
     "craft",
