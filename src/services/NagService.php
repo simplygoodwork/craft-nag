@@ -50,7 +50,7 @@ class NagService extends Component
         ) {
             $sendAlert = true;
 
-            $subject = sprintf('Username changed on %s website', 
+            $subject = sprintf('Username changed on %s website',
                 Craft::$app->getSystemName()
             );
 
@@ -63,7 +63,7 @@ class NagService extends Component
         elseif ($event->sender->email !== $oldProfile->email) {
             $sendAlert = true;
 
-            $subject = sprintf('Email address changed on %s website', 
+            $subject = sprintf('Email address changed on %s website',
                 Craft::$app->getSystemName()
             );
 
@@ -82,7 +82,7 @@ class NagService extends Component
 
     public function handleLogin($user): void
     {
-        $subject = sprintf('New sign in on %s website', 
+        $subject = sprintf('New sign in on %s website',
             Craft::$app->getSystemName()
         );
 
@@ -97,7 +97,7 @@ class NagService extends Component
     {
         // Kicks off after a user logs in
         $sendAlert = false;
-                
+
         // Are we restricting alerts?
         if (!$this->_settings->alertRestrictedGroups) {
             $sendAlert = true;
@@ -170,22 +170,41 @@ class NagService extends Component
         if ($apiKey) {
             $endpoint = 'https://api.ip2location.io/';
 
-            $uri = sprintf('%s?key=%s&ip=%s', 
-                $endpoint, 
+            $uri = sprintf('%s?key=%s&ip=%s',
+                $endpoint,
                 $apiKey,
                 $ip4
             );
 
-            $client = Craft::createGuzzleClient();
-            $response= $client->request('GET',  $uri);
-            $data = $response->getBody()->getContents() ?? null;
+            try {
+                $client = Craft::createGuzzleClient();
+                $response = $client->request('GET',  $uri);
+                $data = $response->getBody()->getContents() ?? null;
 
-            $locationData = json_decode($data, false);
-            if ($locationData) {
-                return $locationData->city_name . ', ' . $locationData->country_name;
-            }    
+                $locationData = json_decode($data, false);
+                if ($locationData) {
+                    return $locationData->city_name . ', ' . $locationData->country_name;
+                }
+            }
+            catch (\GuzzleHttp\Exception\GuzzleException $error) {
+                $response = $error->getResponse();
+                $body = $response->getBody()->getContents();
+                $message = json_decode($body, false);
+
+                // Log that the user has logged in
+                LogToFile::info(sprintf('ip2location.io error. Response %s - %s',
+                    $response->getStatusCode(),
+                    $message->error->error_message,
+                ), 'nag');
+            }
+            catch (\Exception $error) {
+                // Log that the user has logged in
+                LogToFile::info(sprintf('Error connecting to ip2location.io service. %s',
+                    $error->getMessage()
+                ), 'nag');
+            }
         }
-  
+
         return '';
     }
 }

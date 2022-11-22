@@ -11,9 +11,9 @@
 	}) }}
 
 	<div id="restrictAlerts" class="nested-fields{% if not settings.alertRestrictedGroups %} hidden{% endif %}">
-		{% set allGroups = craft.app.userGroups.allGroups()|map(g => { 
-			value: g.id, 
-			label: g.name 
+		{% set allGroups = craft.app.userGroups.allGroups()|map(g => {
+			value: g.id,
+			label: g.name
 		}) %}
 
 		{{ forms.checkboxGroupField({
@@ -30,14 +30,18 @@
 			on: settings.alertAdmins,
 		}) }}
 	</div>
-  
+</div>
+<hr>
+<div>
   {{ forms.lightswitchField({
 	  label: "Alert Users on Profile Change"|t('nag'),
 	  instructions: "Sends an email if the username/email is changed"|t('nag'),
 	  name: 'alertOnProfileChange',
 	  on: settings.alertOnProfileChange,
   }) }}
-
+</div>
+<hr>
+<div>
 	{{ forms.textareaField({
 		label: "Message Footer"|t('nag'),
 		instructions: "Add contact details to the end of the alert message."|t('nag'),
@@ -55,5 +59,8 @@
 		required: false,
 		placeholder: "$IP2LOCATION_API_KEY",
 	}) }}
-
 </div>
+
+<hr>
+<a href="{{ actionUrl('nag/default/test') }}" class="btn formsubmit">Test notification</a><br>
+<small>Save settings first</small>

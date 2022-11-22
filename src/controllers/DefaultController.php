@@ -27,9 +27,10 @@ class DefaultController extends Controller
 
     public function actionTest()
     {
-      Nag::$plugin->nagService->handleLogin(Craft::$app->user->getIdentity());
+        Nag::$plugin->nagService->handleLogin(Craft::$app->user->getIdentity());
 
-      return true;
+        Craft::$app->session->setNotice('Test message queued.');
+        return $this->redirect(Craft::$app->request->referrer);
     }
 
 }
