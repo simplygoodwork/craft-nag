@@ -7,6 +7,7 @@ namespace simplygoodwork\nag;
 
 use Craft;
 use craft\base\Plugin;
+use craft\elements\User as UserElement;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\User;
 
@@ -78,6 +79,10 @@ class Nag extends Plugin
         // After user login
         Event::on(User::class, User::EVENT_AFTER_LOGIN,
             [self::$plugin->nagService, 'onAfterLoginHandler']
+        );
+
+        Event::on(UserElement::class, UserElement::EVENT_BEFORE_SAVE,
+            [self::$plugin->nagService, 'onAfterUserSaveHandler']
         );
     }
 
