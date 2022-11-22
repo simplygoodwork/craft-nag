@@ -12,6 +12,7 @@ class SettingsModel extends Model
     public bool $onlyAlertForNewIp = false;
     public bool $alertAdmins = true;
     public bool $alertRestrictedGroups = false;
+    public bool $alertOnProfileChange = true;
     public array $alertUserGroups = [];
     public string $alertFooter = '';
     public string $geolocationApiKey = '';

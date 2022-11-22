@@ -10,6 +10,7 @@ use simplygoodwork\nag\helpers\LogToFile;
 
 use Craft;
 use craft\base\Component;
+use craft\elements\User as UserElement;
 use craft\helpers\App;
 use DeviceDetector\DeviceDetector;
 
@@ -29,11 +30,74 @@ class NagService extends Component
         $this->handleLogin($event->identity);
     }
 
-    public function handleLogin($user): bool
+    public function onAfterUserSaveHandler($event): void
+    {
+        // Ignore new users and check we should be sending alerts
+        if ($event->isNew || !$this->_settings->alertOnProfileChange) {
+            return;
+        }
+
+        // Retrieve old entry and get username + email address
+        $oldProfile = UserElement::findOne(
+            $event->sender->id
+        );
+
+        $sendAlert = false;
+        // Compare old and new values
+        if (
+            !Craft::$app->getConfig()->getGeneral()->useEmailAsUsername
+            && $event->sender->username !== $oldProfile->username
+        ) {
+            $sendAlert = true;
+
+            $subject = sprintf('Username changed on %s website', 
+                Craft::$app->getSystemName()
+            );
+
+            $message = sprintf('Your username was updated on %s from %s to %s.',
+                Craft::$app->getSystemName(),
+                $oldProfile->username,
+                $event->sender->username
+            );
+        }
+        elseif ($event->sender->email !== $oldProfile->email) {
+            $sendAlert = true;
+
+            $subject = sprintf('Email address changed on %s website', 
+                Craft::$app->getSystemName()
+            );
+
+            $message = sprintf('Your email address was updated on %s from %s to %s.',
+                Craft::$app->getSystemName(),
+                $oldProfile->username,
+                $event->sender->username
+            );
+        }
+
+        // If the either have changed, send a message to old email with an alert
+        if ($sendAlert) {
+          $this->_sendAlert($oldProfile, $subject, $message);
+        }
+    }
+
+    public function handleLogin($user): void
+    {
+        $subject = sprintf('New sign in on %s website', 
+            Craft::$app->getSystemName()
+        );
+
+        $message = sprintf('Someone signed-in to your %s website account.',
+            Craft::$app->getSystemName()
+        );
+
+        $this->_sendAlert($user, $subject, $message);
+    }
+
+    private function _sendAlert($user, $subject, $message)
     {
         // Kicks off after a user logs in
         $sendAlert = false;
-        
+                
         // Are we restricting alerts?
         if (!$this->_settings->alertRestrictedGroups) {
             $sendAlert = true;
@@ -51,18 +115,9 @@ class NagService extends Component
                 }
             }
         }
-        // TODO: location based alerts $onlyAlertForNewIp
 
         // Use anonymized IP address
         $ipAddress = $this->_anonymizeIp(Craft::$app->getRequest()->userIP);
-
-        // Log that the user has logged in
-        LogToFile::info(sprintf('User %d - %s from %s. Alerted: %s', 
-            $user->id, 
-            $user->email,
-            $ipAddress,
-            $sendAlert ? 'Y' : 'N'
-        ), 'nag');
 
         // Send an email notification to the User about login
         if ($sendAlert) {
@@ -77,14 +132,11 @@ class NagService extends Component
                 'location' => $this->_ip2Location($ipAddress),
             ];
 
-            $subject = sprintf('New sign in on %s website', 
-                Craft::$app->getSystemName()
-            );
-
             Craft::$app->getView()->setTemplateMode('cp');
             $body = Craft::$app->getView()->renderTemplate('nag/email', [
                 'user' => $user,
-                'meta' => $meta
+                'meta' => $meta,
+                'message' => $message
             ]);
 
             Craft::$app->mailer->compose()
@@ -93,8 +145,6 @@ class NagService extends Component
                 ->setTo($user->email)
                 ->send();
         }
-
-        return $sendAlert;
     }
 
 

@@ -1,23 +1,7 @@
 {% requireAdmin %}
-
 {% import "_includes/forms" as forms %}
 
 <div>
-	{# 
-	<div class="readable">
-		<blockquote class="note tip">
-			The Nag plugin sends an email alert to users on login, which may alert them of a compromised account.
-		</blockquote>
-	</div> #}
-
-	{# {{ forms.lightswitchField({
-		label: "Only alert for new locations"|t('nag'),
-		instructions: "Only sends an email if the IP address is different from the last login"|t('nag'),
-		name: 'onlyAlertForNewIp',
-		on: settings.onlyAlertForNewIp,
-		first: true,
-	}) }} #}
-
 	{{ forms.lightswitchField({
 		label: "Restrict alerts to specific User Groups"|t('nag'),
 		instructions: "If disabled, all users will receive an alert"|t('nag'),
@@ -45,12 +29,18 @@
 			name: 'alertAdmins',
 			on: settings.alertAdmins,
 		}) }}
-
 	</div>
+  
+  {{ forms.lightswitchField({
+	  label: "Alert Users on Profile Change"|t('nag'),
+	  instructions: "Sends an email if the username/email is changed"|t('nag'),
+	  name: 'alertOnProfileChange',
+	  on: settings.alertOnProfileChange,
+  }) }}
 
 	{{ forms.textareaField({
 		label: "Message Footer"|t('nag'),
-		instructions: "Add contact details to the end of the alert message. Accepts markdown"|t('nag'),
+		instructions: "Add contact details to the end of the alert message."|t('nag'),
 		name: 'alertFooter',
 		value: settings.alertFooter
 	}) }}
