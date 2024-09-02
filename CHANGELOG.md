@@ -1,5 +1,9 @@
 # Nag Changelog
 
+## 2.0.0 - 2024-09-01
+
+- Update for Craft 5
+
 ## 1.0.4 - 2022-11-22
 
 ### Added

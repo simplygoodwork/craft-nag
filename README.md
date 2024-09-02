@@ -1,4 +1,4 @@
-# Nag plugin for Craft CMS 4.x
+# Nag plugin for Craft CMS
 
 Nag is a Craft CMS plugin that sends an email notification to users on login. This is intended to alert users of unauthorized logins by a bad actor.
 
@@ -6,7 +6,7 @@ Follow the [@simplygoodwork](https://twitter.com/simplygoodwork) Twitter account
 
 ## Requirements
 
-This plugin requires Craft CMS `4.0.0-alpha` or later.
+This plugin requires Craft CMS `5.0.0` or later.
 
 An email gateway is configured in **Settings → Email**.
 
